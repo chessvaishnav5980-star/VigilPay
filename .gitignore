@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+*.class
+tools/cpp/redflag_scanner
+.venv/
+.pytest_cache/
