@@ -1,0 +1,285 @@
+{
+  "version": 1,
+  "helpline": "1930",
+  "portal": "cybercrime.gov.in",
+  "signals": [
+    {"id": "urgency", "label": "Pressure to act fast", "w": 1.5,
+     "p": "urgent|immediately|right now|asap|within \\d+ ?(min|minute|minutes|hour|hours)|today only|last chance|expire|expiring|blocked|suspend|tonight|final notice|before midnight"},
+    {"id": "asks_pin", "label": "Asks for your UPI PIN", "w": 3,
+     "p": "(asked|asks|asking|ask|wants?|wanted|told|tells?|telling|needs?|require|requires|share|give|tell|send|read|forward).{0,30}(upi pin|mpin|\\bpin\\b)|(enter|type|put) (your|ur) (upi )?(pin|mpin)"},
+    {"id": "asks_otp", "label": "Asks for an OTP or code", "w": 3,
+     "p": "(share|give|tell|send|read|forward|asked|ask|asking|need|needs|want|wants|wanted|require|requires).{0,30}(otp|verification code|6.digit|six.digit|\\bcode\\b)"},
+    {"id": "remote_app", "label": "Wants you to install a screen-sharing app", "w": 4,
+     "p": "anydesk|teamviewer|quicksupport|quick support|rustdesk|screen.?shar|remote (access|app|support)"},
+    {"id": "link_qr", "label": "Link, QR code or app file involved", "w": 1,
+     "p": "\\blink\\b|\\bqr\\b|scan|\\bapk\\b|http|www\\.|\\.apk"},
+    {"id": "advance", "label": "Asks you to pay first", "w": 2.5,
+     "p": "advance|token amount|booking amount|processing fee|registration fee|security deposit|pay first|pay a fee|fee to (claim|release|get)|customs fee|clearance fee"},
+    {"id": "authority", "label": "Claims to be an official", "w": 3,
+     "p": "(calling|call|called|calls|message|from) .{0,12}(the )?(bank|npci|rbi|police|cbi|customs|courier|trai|court|income tax|electricity board|officer)|claiming to be|pretend|says (he|she|they) (is|are) (from|a|an)|(police|cbi|customs|narcotics|cyber ?crime) (officer|officers|department|case)"},
+    {"id": "unknown", "label": "From a stranger or unknown number", "w": 1.5,
+     "p": "stranger|unknown (number|person|caller|sender)|new number|someone i (don't|do not|dont) know|never met|random (person|number|guy)|unsaved"},
+    {"id": "reward", "label": "Offers a prize, refund or reward", "w": 1.5,
+     "p": "\\bwon\\b|winner|prize|lottery|cashback|reward|free gift|jackpot|lucky draw|refund"},
+    {"id": "secrecy", "label": "Tells you to keep it secret", "w": 3,
+     "p": "don'?t tell|do not tell|keep (it )?(a )?secret|don'?t (inform|disconnect|hang up|cut)|stay on (the )?(call|video)"},
+    {"id": "receive_money", "label": "Says you will 'receive' money", "w": 1.5,
+     "p": "(receive|get|claim|collect).{0,20}(money|payment|amount|refund|cashback|prize|reward)"}
+  ],
+  "safeSignals": [
+    {"id": "no_pin", "label": "They did not ask for a PIN/OTP", "w": -3.5,
+     "p": "(didn'?t|did not|never|not|no|without).{0,20}(ask|asking|asked|need|needed|require).{0,20}(pin|otp|code)|no pin|no otp"},
+    {"id": "normal_pay", "label": "Looks like a normal payment you started", "w": -2.5,
+     "p": "i (am|was|will be|'m) paying (at |to )?(a |the |my )?(shop|store|restaurant|petrol|merchant|canteen|friend|landlord)|(scanned|scanning) (the |a )?(shop|shopkeeper|store|merchant)'?s? qr"},
+    {"id": "verified_self", "label": "You are verifying through an official route", "w": -2,
+     "p": "official app|number (on|printed on) (my )?card|called the bank (myself|directly)|i (called|rang) (the )?bank|bank'?s? (own )?website"}
+  ],
+  "scenarios": [
+    {
+      "id": "qr-receive", "icon": "📷", "category": "Collect request / QR",
+      "name": "Scan-to-Receive QR / Collect Request",
+      "example": "A stranger asked me to scan a QR code to receive money and enter my PIN.",
+      "redFlags": ["A PIN is asked 'to receive' money", "QR or collect request from a stranger", "Money is said to be 'coming to you'"],
+      "why": "Entering your UPI PIN always SENDS money. You never need a PIN, or a QR scan, to receive money.",
+      "actions": ["Do not scan or approve it, and never enter your PIN", "Decline the collect request and block the sender", "If money already left, call 1930 immediately and report at cybercrime.gov.in"],
+      "source": "RBI BE(A)WARE booklet; NPCI UPI safety awareness",
+      "question": {"text": "Did the app or QR ask you to enter your UPI PIN?", "yes": "they asked me to enter my pin to receive money", "no": "they did not ask for my pin"},
+      "triggers": [
+        {"p": "scan.{0,40}(qr|code).{0,50}(receive|get|claim|money)|qr.{0,40}(receive|claim)", "w": 4},
+        {"p": "receive.{0,30}(money|payment|amount).{0,40}(qr|scan|pin|link)", "w": 4},
+        {"p": "collect request|payment request|money request|request.{0,12}(approve|accept)|approve.{0,12}request", "w": 3},
+        {"p": "(enter|put|type).{0,20}pin.{0,40}(receive|get money|credit|incoming)", "w": 4}
+      ]
+    },
+    {
+      "id": "refund-cashback", "icon": "🎁", "category": "Phishing link",
+      "name": "Fake Refund / Cashback Trap",
+      "example": "I got a message saying my refund failed and I should click a link to claim it.",
+      "redFlags": ["Refund for something you don't remember buying", "A link or QR is needed to 'claim' it", "Message from an unknown sender"],
+      "why": "Real refunds are credited automatically to your account. Nobody needs a link, QR or PIN to give you your own refund.",
+      "actions": ["Don't tap the link or scan the QR", "Delete the message and block the number", "Check the real order status only in the official shopping or bank app"],
+      "source": "RBI BE(A)WARE booklet; cybercrime.gov.in awareness",
+      "question": {"text": "Did the message come with a link, QR or ask for your PIN?", "yes": "it has a link and asks me to enter my pin to claim", "no": "no link and no pin was asked"},
+      "triggers": [
+        {"p": "refund.{0,40}(link|qr|claim|click|failed|scan)|(link|qr|click).{0,40}refund", "w": 4},
+        {"p": "cashback.{0,40}(link|qr|claim|click|scan|won|received)|claim.{0,20}cashback", "w": 4},
+        {"p": "(won|got|received).{0,15}(rs|₹|rupees)? ?\\d+.{0,15}(cashback|reward)", "w": 3}
+      ]
+    },
+    {
+      "id": "kyc-vishing", "icon": "📞", "category": "Phone call (vishing)",
+      "name": "Fake Bank / KYC Call",
+      "example": "Someone from the 'bank' called saying my KYC will expire today and asked for my OTP.",
+      "redFlags": ["Caller says KYC or account will be blocked", "Asks for OTP, PIN or card details", "Creates urgency and fear"],
+      "why": "Banks and NPCI never ask for your OTP, PIN or CVV on a call. The OTP is the key that lets the scammer take your money.",
+      "actions": ["Hang up without sharing anything", "Call your bank on the number printed on your card or in its official app", "If you shared an OTP, call your bank and 1930 right now"],
+      "source": "RBI BE(A)WARE booklet; NPCI UPI safety awareness",
+      "question": {"text": "Did they ask you for an OTP, PIN or card details?", "yes": "they asked me to share my otp", "no": "they did not ask for any otp or pin"},
+      "triggers": [
+        {"p": "kyc.{0,50}(expire|expiring|update|block|suspend|pending|verify|verification)|(expire|update|verify).{0,30}kyc", "w": 4},
+        {"p": "(bank|account).{0,30}(will be |is going to be )?(blocked|suspended|closed|frozen)", "w": 3},
+        {"p": "(call|called|calling|phone).{0,40}(bank|sbi|hdfc|icici|axis|paytm|phonepe|google ?pay|npci).{0,60}(otp|pin|kyc|verify|blocked)", "w": 4},
+        {"p": "bank (manager|officer|executive|representative).{0,40}(otp|pin|verify|kyc)", "w": 3},
+        {"p": "(bank|sbi|hdfc|icici|axis|paytm|phonepe|npci).{0,30}(called|calling|call|phoned|rang).{0,80}(otp|pin|kyc|verify|blocked)", "w": 4}
+      ]
+    },
+    {
+      "id": "screen-share", "icon": "🖥️", "category": "Remote access",
+      "name": "Screen-Share App Scam (AnyDesk / TeamViewer)",
+      "example": "A 'support agent' asked me to install AnyDesk to fix my payment problem.",
+      "redFlags": ["Asked to install a remote-access app", "Support call you did not start", "They want you to open your payment app"],
+      "why": "Remote apps let the scammer see your screen, read your OTPs and move money from your phone directly.",
+      "actions": ["Do not install it, or uninstall it right away if you already did", "Turn off internet, then call your bank to block UPI/cards", "Report to 1930 and cybercrime.gov.in"],
+      "source": "RBI BE(A)WARE booklet; cybercrime.gov.in advisories",
+      "question": {"text": "Did they ask you to install an app or share your screen?", "yes": "they asked me to install anydesk and share my screen", "no": "they did not ask me to install anything"},
+      "triggers": [
+        {"p": "anydesk|teamviewer|quicksupport|quick support|rustdesk", "w": 5},
+        {"p": "(install|download).{0,30}(app|software).{0,40}(support|fix|verify|refund|kyc|help)", "w": 3},
+        {"p": "screen.?shar|share.{0,10}(my )?screen|remote (access|control|support)", "w": 4}
+      ]
+    },
+    {
+      "id": "fake-seller", "icon": "🛒", "category": "Marketplace",
+      "name": "Fake Buyer / Seller Advance Scam",
+      "example": "A buyer on OLX said he will pay me and sent a request; a seller wants an advance before delivery.",
+      "redFlags": ["Insists on advance or 'token' payment", "Buyer sends a request you must 'approve' to get paid", "Wants to move chat to WhatsApp quickly, no meeting"],
+      "why": "Real buyers only need your UPI ID to pay you. If you must approve or enter a PIN, money is going OUT. Advance to strangers often vanishes.",
+      "actions": ["Never approve a collect request from a buyer", "Meet in public and pay only on delivery or after you see the product", "Block and report the listing on the platform"],
+      "source": "RBI BE(A)WARE booklet; police cyber cell advisories",
+      "question": {"text": "Are they asking you to pay in advance, or to approve a request to get paid?", "yes": "they want an advance payment and a request to approve", "no": "no advance and no approval needed"},
+      "triggers": [
+        {"p": "olx|quikr|facebook marketplace|marketplace|second.?hand|used (phone|bike|car|laptop|sofa|furniture)", "w": 2},
+        {"p": "(buyer|seller).{0,60}(advance|token|booking|request|approve|pin|qr)", "w": 4},
+        {"p": "(advance|token|booking).{0,30}(before|first|delivery|meeting|seeing)", "w": 3.5},
+        {"p": "(army|defence|crpf|transferred).{0,40}(officer|personnel|sell|buy|pay)", "w": 3}
+      ]
+    },
+    {
+      "id": "accidental-payment", "icon": "↩️", "category": "Reverse-transfer trick",
+      "name": "'Sent by Mistake, Please Return' Trick",
+      "example": "A stranger sent ₹5,000 by mistake and is calling me to send it back.",
+      "redFlags": ["Unknown person sends money 'by mistake'", "Pressure to return it quickly, to another account/UPI ID", "Emotional story (emergency, medical)"],
+      "why": "The incoming money can be from a fraud or stolen account, and may be reversed later, while your 'return' is real money out of your pocket.",
+      "actions": ["Don't send money back to a different UPI ID or number", "Tell your bank and let them handle any real mistaken credit", "Don't spend the money. Report to 1930 if you are being pressured"],
+      "source": "Police cyber cell advisories; RBI BE(A)WARE booklet",
+      "question": {"text": "Did the person ask you to return the money straight to them, outside the bank?", "yes": "they want me to send it back directly to their number", "no": "i have not been asked to send anything"},
+      "triggers": [
+        {"p": "(sent|transferred|paid|credited).{0,30}(by mistake|wrong(ly)?|accident)|wrong number.{0,30}(sent|money|payment)", "w": 4},
+        {"p": "(return|send back|refund|give back).{0,30}(money|amount|it|₹|rs)", "w": 2.5},
+        {"p": "accidental(ly)? (payment|transfer|sent)|mistakenly (sent|transferred)", "w": 4}
+      ]
+    },
+    {
+      "id": "fake-customer-care", "icon": "☎️", "category": "Fake helpline",
+      "name": "Fake Customer Care Number",
+      "example": "I searched Google for the customer care number of an app and they asked for my card details.",
+      "redFlags": ["Number found through search results, ads or social posts", "Agent asks for OTP, PIN or to install an app", "Agent contacts you first after you posted a complaint"],
+      "why": "Scammers publish fake helpline numbers and watch social media complaints. Real support never asks for your PIN or OTP.",
+      "actions": ["Use only the helpline inside the official app or on the official website/card", "Hang up if they ask for PIN, OTP or to install anything", "Report the number at cybercrime.gov.in"],
+      "source": "RBI BE(A)WARE booklet; cybercrime.gov.in awareness",
+      "question": {"text": "Did you find this number through a web search or social media?", "yes": "i found the number by searching online", "no": "the number is from the official app or my card"},
+      "triggers": [
+        {"p": "customer care|customer support|helpline|toll.?free|support (number|team|agent|executive)", "w": 3},
+        {"p": "(google|search|searched|facebook|twitter|instagram).{0,40}(number|helpline|customer|support)", "w": 3},
+        {"p": "(complain|complaint|posted).{0,40}(twitter|social|call(ed)? me|contacted)", "w": 3}
+      ]
+    },
+    {
+      "id": "lottery-prize", "icon": "🏆", "category": "Prize / lottery",
+      "name": "Lottery, Prize or KBC-style Win",
+      "example": "I got a message that I won a lottery and must pay a small fee to receive the prize.",
+      "redFlags": ["You never entered any contest", "You must pay a 'fee', 'tax' or 'courier' charge first", "Winner message from a random number"],
+      "why": "Genuine prizes never ask you to pay money first. The 'small fee' is the whole scam, and it is usually followed by more demands.",
+      "actions": ["Ignore and do not pay any fee", "Block the number and delete the message", "Report on cybercrime.gov.in if you lost money"],
+      "source": "RBI BE(A)WARE booklet; cybercrime.gov.in awareness",
+      "question": {"text": "Are they asking you to pay a fee or tax before you get the prize?", "yes": "they want a fee first to release the prize", "no": "no payment is needed from me"},
+      "triggers": [
+        {"p": "lottery|lucky draw|kbc|jackpot|you (have )?won|winner|prize money|won (a|an|₹|rs|\\d)", "w": 4},
+        {"p": "(pay|send).{0,25}(fee|tax|charges|gst).{0,30}(prize|gift|lottery|reward|win)", "w": 4},
+        {"p": "free (gift|iphone|phone|car|laptop)", "w": 3}
+      ]
+    },
+    {
+      "id": "job-task", "icon": "💼", "category": "Online job / task",
+      "name": "Part-Time Job / 'Task' Scam",
+      "example": "A Telegram group offers money for liking videos but now asks me to deposit money to unlock tasks.",
+      "redFlags": ["High pay for very easy online work", "You must deposit money to 'unlock' tasks or withdraw", "Contact only via WhatsApp or Telegram groups"],
+      "why": "They pay a small amount at first to build trust, then demand larger and larger deposits. Money you 'earn' can never be withdrawn.",
+      "actions": ["Stop paying, since nothing will be returned", "Save chats and payment proofs", "Call 1930 and file a report on cybercrime.gov.in quickly"],
+      "source": "Police cyber cell advisories; cybercrime.gov.in awareness",
+      "question": {"text": "Are you being asked to deposit money to earn or withdraw?", "yes": "they asked me to deposit money to unlock tasks", "no": "i am not asked to pay anything"},
+      "triggers": [
+        {"p": "part.?time job|work from home|task(s)?.{0,30}(earn|money|pay|like|rating|review)|like.{0,15}(videos|youtube)", "w": 3.5},
+        {"p": "(telegram|whatsapp) (group|channel).{0,50}(earn|task|job|invest|profit)", "w": 3.5},
+        {"p": "(deposit|recharge|pay).{0,30}(unlock|withdraw|task|commission|prepaid)", "w": 4},
+        {"p": "(earn|make).{0,20}(₹|rs\\.?) ?\\d+.{0,20}(per day|daily|easy|simple)", "w": 3}
+      ]
+    },
+    {
+      "id": "electricity-bill", "icon": "💡", "category": "Utility threat",
+      "name": "'Electricity Will Be Cut Tonight' SMS",
+      "example": "An SMS said my electricity will be disconnected tonight unless I call an officer and pay.",
+      "redFlags": ["Threat of disconnection tonight", "Asks you to call a personal mobile number", "Asks you to pay a small bill via a link or install an app"],
+      "why": "Electricity boards do not disconnect connections through random SMS from personal numbers. The 'officer' will try to take over your phone or payments.",
+      "actions": ["Do not call or click", "Check the bill in the official board app or website", "Report the number to 1930 / cybercrime.gov.in"],
+      "source": "Electricity board and police cyber cell advisories",
+      "question": {"text": "Does the message ask you to call a mobile number or install an app?", "yes": "it asks me to call a number and install an app", "no": "it only shows my bill and nothing else"},
+      "triggers": [
+        {"p": "electricity|power (supply|connection)|light bill|eb bill|discom|bescom|tsspdcl|tgspdcl", "w": 2},
+        {"p": "(disconnect|disconnected|cut|cut off|terminated).{0,40}(tonight|today|midnight|9:?30)", "w": 4},
+        {"p": "(bill|electricity).{0,40}(not (paid|updated)|pending|last month).{0,40}(call|officer|contact)", "w": 3}
+      ]
+    },
+    {
+      "id": "fake-screenshot", "icon": "🧾", "category": "Shopkeepers",
+      "name": "Fake Payment Screenshot",
+      "example": "A customer showed me a payment success screenshot but I did not get an SMS or sound.",
+      "redFlags": ["Customer shows a screenshot instead of waiting", "No bank SMS and no soundbox confirmation", "Customer is in a hurry to leave"],
+      "why": "Screenshots and edited payment apps are easy to fake. Only your own bank credit confirms that money has arrived.",
+      "actions": ["Check your own bank or UPI app for the credit before giving the goods", "Ask the customer to wait or pay again", "Report repeated cases to local police"],
+      "source": "RBI BE(A)WARE booklet; NPCI merchant awareness",
+      "question": {"text": "Have you seen the amount credited in YOUR own app or bank SMS?", "yes": "i saw the credit in my own app", "no": "i have not seen the credit in my own account"},
+      "triggers": [
+        {"p": "screenshot.{0,50}(payment|paid|success|transaction|done)|(payment|paid|success).{0,40}screenshot", "w": 4},
+        {"p": "(fake|edited|forged).{0,15}(payment|app|screenshot|receipt)", "w": 4},
+        {"p": "(shop|shopkeeper|customer|merchant).{0,60}(showed|shows|showing|says).{0,30}(paid|payment|success)", "w": 3}
+      ]
+    },
+    {
+      "id": "loan-app", "icon": "📲", "category": "Loan apps",
+      "name": "Instant Loan App / Processing Fee",
+      "example": "An app promised an instant loan but asked for a processing fee and access to my contacts.",
+      "redFlags": ["Loan approved without checks, fee asked first", "App asks for contacts, photos and SMS access", "Threats or shaming messages to your contacts"],
+      "why": "Illegal loan apps charge upfront fees, steal data and harass borrowers. Genuine lenders are registered with the RBI.",
+      "actions": ["Do not pay the fee or share more data", "Uninstall the app and report it", "Borrow only from RBI-registered banks and NBFCs, and report threats to 1930"],
+      "source": "RBI digital lending warnings; cybercrime.gov.in advisories",
+      "question": {"text": "Did they ask for a fee, or for access to your contacts?", "yes": "they asked for a processing fee and my contacts", "no": "they asked for nothing like that"},
+      "triggers": [
+        {"p": "loan app|instant loan|quick loan|easy loan|loan.{0,30}(approved|offer|processing fee)", "w": 3.5},
+        {"p": "(loan|borrow).{0,50}(contacts|photos|gallery|harass|threat|morph)", "w": 4},
+        {"p": "processing fee.{0,30}loan|loan.{0,40}(fee|charges).{0,20}(first|upfront|advance)", "w": 4}
+      ]
+    },
+    {
+      "id": "family-emergency", "icon": "🆘", "category": "Impersonation",
+      "name": "'Friend or Relative in Emergency' Message",
+      "example": "A new number says it is my cousin who lost his phone and needs money urgently.",
+      "redFlags": ["'Hi, this is my new number', no proof of identity", "Emergency (accident, hospital, lost wallet)", "Asks you not to call, payment to a new account"],
+      "why": "Scammers copy photos and names from social media to pretend to be someone you trust and rush you into paying.",
+      "actions": ["Call the real person on their old, saved number first", "Ask a question only the real person would know", "Do not pay until you have confirmed, and report the number"],
+      "source": "Police cyber cell advisories; cybercrime.gov.in awareness",
+      "question": {"text": "Have you spoken to this person on their old, saved number?", "yes": "i called their old number and they confirmed", "no": "i have not been able to confirm on their old number"},
+      "triggers": [
+        {"p": "new number.{0,60}(friend|cousin|brother|sister|dad|mom|uncle|relative|boss|sir)", "w": 3.5},
+        {"p": "(friend|cousin|brother|sister|relative|uncle|aunty|boss).{0,60}(emergency|accident|hospital|lost (his|her|my) phone|urgent).{0,60}(money|pay|send|transfer)", "w": 4},
+        {"p": "(pretend|pretending|impersonat).{0,30}(friend|relative|boss|family)|(photo|dp).{0,20}(friend|boss).{0,40}(money|urgent)", "w": 3}
+      ]
+    },
+    {
+      "id": "whatsapp-code", "icon": "💬", "category": "Account takeover",
+      "name": "'I Sent My Code to Your Number by Mistake'",
+      "example": "A person says they sent a 6-digit code to my number by mistake and wants me to forward it.",
+      "redFlags": ["Asks you to forward a verification code", "Message appears to come from a friend or stranger", "Urgent, polite tone, 'please help'"],
+      "why": "That code is the lock on THEIR new account attempt: your number is being used to take over a WhatsApp or UPI account or to register the scammer's device.",
+      "actions": ["Never forward any verification code to anyone", "Turn on two-step verification in WhatsApp", "Block the sender and tell your contacts if your account was hijacked"],
+      "source": "WhatsApp safety advisories; cybercrime.gov.in awareness",
+      "question": {"text": "Did you forward or read out the code to them?", "yes": "i already shared the code with them", "no": "i did not share the code"},
+      "triggers": [
+        {"p": "(code|otp).{0,40}(by mistake|mistakenly|wrong number|wrongly)|(by mistake|mistakenly).{0,40}(code|otp)", "w": 6.5},
+        {"p": "(whatsapp|telegram).{0,30}(code|verification).{0,40}(send|forward|share|give|tell)", "w": 4},
+        {"p": "(forward|send|share|tell|read).{0,20}(me )?(the )?(6|six).?digit", "w": 4},
+        {"p": "(6|six).?digit.{0,40}(forward|send|share|tell|read|mistake)", "w": 4}
+      ]
+    },
+    {
+      "id": "apk-file", "icon": "📦", "category": "Malicious app file",
+      "name": "Fake APK / 'Update' File (Challan, KYC, Scheme)",
+      "example": "I got a WhatsApp file called RTO_Challan.apk and a message to install it or pay a fine.",
+      "redFlags": ["A file ending in .apk sent over chat or SMS", "Threat: challan, KYC, electricity or government-scheme update", "Asks you to allow 'install from unknown sources'"],
+      "why": "These files install spyware that reads your SMS, OTPs and UPI app. No government or bank sends apps over chat.",
+      "actions": ["Do not open or install it, and delete the file", "If installed, switch to airplane mode, uninstall it and call your bank at once", "Report to 1930 and cybercrime.gov.in"],
+      "source": "RBI BE(A)WARE booklet; cybercrime.gov.in advisories",
+      "question": {"text": "Is it an .apk or an app that you were told to install outside the Play Store?", "yes": "it is an apk file i was told to install", "no": "it is not an app, only a normal message"},
+      "triggers": [
+        {"p": "\\.apk|\\bapk\\b", "w": 4.5},
+        {"p": "(challan|rto|traffic fine|parivahan).{0,50}(apk|app|install|download|link)", "w": 4},
+        {"p": "unknown sources|install.{0,30}(outside|not from).{0,20}play ?store|sideload", "w": 4}
+      ]
+    },
+    {
+      "id": "digital-arrest", "icon": "🚔", "category": "Fake police / courier",
+      "name": "'Digital Arrest' / Fake Police or Courier Parcel Call",
+      "example": "A video caller in police uniform said a parcel in my name has drugs and I must stay on call and pay to avoid arrest.",
+      "redFlags": ["Caller claims to be police, CBI, customs or courier about a parcel", "Tells you to stay on the video call and not tell anyone", "Demands money to 'verify' or avoid arrest"],
+      "why": "There is no such thing as a 'digital arrest' in Indian law. Police and agencies never arrest people on video call or ask for money to clear a case.",
+      "actions": ["Disconnect, and do not transfer any money", "Talk to family and call your local police station or 1930", "Report on cybercrime.gov.in"],
+      "source": "MHA I4C and PIB advisories; cybercrime.gov.in",
+      "question": {"text": "Are they telling you to stay on the call, keep it secret, or pay money?", "yes": "they told me to stay on the call and not tell anyone and pay money", "no": "they are not asking me to pay or stay on the call"},
+      "triggers": [
+        {"p": "digital arrest|video (call|calls?).{0,50}(arrest|police|cbi|custody)", "w": 6},
+        {"p": "(parcel|courier|package).{0,60}(drugs|illegal|fedex|customs|narcotics|passport|seized)", "w": 4.5},
+        {"p": "(police|cbi|ed|customs|narcotics|cyber ?crime).{0,40}(officer|officers|department|case|arrest|warrant).{0,60}(pay|money|verify|transfer|stay on)", "w": 4}
+      ]
+    }
+  ]
+}
