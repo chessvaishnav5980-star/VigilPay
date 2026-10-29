@@ -1,0 +1,21 @@
+{
+  "note": "Evergreen guidance maintained by the VigilPay team. Add dated advisories here as official sources publish them.",
+  "items": [
+    {"tag": "Phone and video", "title": "'Digital arrest' and fake police or courier calls", "text": "Callers pose as police, CBI or customs, claim a parcel has drugs or you are linked to a crime, and keep you on a video call while demanding money.",
+     "tips": ["Hang up. There is no 'digital arrest' in Indian law.", "Real agencies never ask you to pay to close a case.", "Tell a family member and call 1930 if you are unsure."], "source": "National Cyber Crime Reporting Portal", "url": "https://cybercrime.gov.in"},
+    {"tag": "Online money", "title": "Part-time job and 'task' scams", "text": "You are paid a small amount for liking videos or rating products, then asked to deposit larger amounts to unlock bigger payouts that never arrive.",
+     "tips": ["Never pay to earn.", "Be wary of jobs that come only through Telegram or WhatsApp groups.", "Save chats and transaction IDs, then report."], "source": "National Cyber Crime Reporting Portal", "url": "https://cybercrime.gov.in"},
+    {"tag": "Investing", "title": "Guaranteed-return trading and investment groups", "text": "Fake experts promise guaranteed profits through apps and groups. Early 'profits' on screen cannot be withdrawn.",
+     "tips": ["No legitimate investment guarantees high returns.", "Check that an adviser or platform is registered with the regulator before paying.", "Do not install apps shared in chat groups."], "source": "RBI Kehta Hai", "url": "https://rbikehtahai.rbi.org.in"},
+    {"tag": "QR and UPI", "title": "'Scan to receive' QR codes and collect requests", "text": "Sellers and buyers on marketplaces are told to scan a QR or approve a request to 'receive' money. Both actions send money out.",
+     "tips": ["You never need a PIN to receive money.", "Give only your UPI ID to a buyer.", "Decline unknown collect requests."], "source": "NPCI", "url": "https://www.npci.org.in"},
+    {"tag": "Phone and SMS", "title": "Fake KYC, blocked-account and electricity-bill messages", "text": "Messages threaten that your account, SIM or power will be cut tonight unless you call a number, click a link or install an app.",
+     "tips": ["Do not call numbers in the message.", "Use the official app or the number on your card.", "Report suspect numbers on the Sanchar Saathi portal."], "source": "Sanchar Saathi", "url": "https://sancharsaathi.gov.in"},
+    {"tag": "Apps and links", "title": "Malicious .apk files sent as challans, KYC or scheme updates", "text": "A file sent on chat is presented as an RTO challan, bank update or government scheme. Installing it can give attackers your SMS and OTPs.",
+     "tips": ["Never install apps from chat or SMS.", "If you did, switch to airplane mode and uninstall it.", "Then call your bank and 1930."], "source": "National Cyber Crime Reporting Portal", "url": "https://cybercrime.gov.in"},
+    {"tag": "Relationships", "title": "'I am your relative in trouble' messages", "text": "Scammers copy a photo and name, claim a lost phone or an emergency, and ask for quick payment to a new account.",
+     "tips": ["Call the real person on their old number.", "Agree a family code word.", "Do not pay until you have confirmed."], "source": "National Cyber Crime Reporting Portal", "url": "https://cybercrime.gov.in"},
+    {"tag": "Shopping", "title": "Fake refund, cashback and customer-care numbers", "text": "A number found in a search result or social post gets you to install remote apps or share OTPs to 'process a refund'.",
+     "tips": ["Use only the helpline inside the official app or on the official site.", "Refunds are credited automatically.", "Never share an OTP to get money."], "source": "RBI Kehta Hai", "url": "https://rbikehtahai.rbi.org.in"}
+  ]
+}
