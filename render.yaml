@@ -1,0 +1,28 @@
+# Render Blueprint: Render -> New -> Blueprint -> pick this GitHub repo.
+services:
+  - type: web
+    name: vigilpay
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --chdir backend app:app --bind 0.0.0.0:$PORT --worker-class gthread --workers 1 --threads 8 --timeout 120 --keep-alive 5
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: SAFE_BROWSING_API_KEY
+        sync: false
+      - key: PREWARM_LANGS
+        value: all
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash

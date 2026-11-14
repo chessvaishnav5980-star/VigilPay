@@ -1,0 +1,92 @@
+{
+  "id": "/",
+  "name": "VigilPay",
+  "short_name": "VigilPay",
+  "description": "A free UPI scam-safety coach. Check a message, call, link or QR code before you pay.",
+  "lang": "en-IN",
+  "dir": "auto",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "orientation": "any",
+  "background_color": "#e4f7f6",
+  "theme_color": "#ffffff",
+  "categories": [
+    "education",
+    "security",
+    "utilities"
+  ],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/icons/vp-any-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/vp-any-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/vp-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/vp-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Emergency numbers",
+      "short_name": "Emergency",
+      "description": "Call 112, 100, 108 or 1930",
+      "url": "/#emergency",
+      "icons": [
+        {
+          "src": "/icons/vp-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Check a message",
+      "short_name": "Check",
+      "description": "Paste a message or link and see the warning signs",
+      "url": "/#coach",
+      "icons": [
+        {
+          "src": "/icons/vp-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Scam toolkit",
+      "short_name": "Toolkit",
+      "description": "Check a link, QR code, number or UPI ID",
+      "url": "/#tools",
+      "icons": [
+        {
+          "src": "/icons/vp-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
