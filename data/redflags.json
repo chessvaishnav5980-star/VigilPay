@@ -1,0 +1,223 @@
+{
+ "title": "Spot the red flags",
+ "exhibits": [
+  {
+   "id": "sms-kyc",
+   "kind": "Text message",
+   "title": "You get this SMS from a mobile number",
+   "head": {
+    "t": "+91 98765 4XXXX",
+    "f": 1,
+    "why": "Banks usually send official messages from a short sender name, not from a personal mobile number."
+   },
+   "parts": [
+    {
+     "t": "Dear Customer, "
+    },
+    {
+     "t": "your HDFC Bank KYC will expire today",
+     "f": 1,
+     "why": "Fake deadline. Real KYC updates are done in the bank app or branch, with no countdown that ends today."
+    },
+    {
+     "t": " and your account will be blocked. ",
+     "f": 1,
+     "why": "A threat of blocking is a pressure tactic to make you act before you think."
+    },
+    {
+     "t": "Update now: "
+    },
+    {
+     "t": "http://hdfc-kycupdate.xyz/login",
+     "f": 1,
+     "why": "The website is not hdfcbank.com. It ends in .xyz and uses a hyphenated name, which is a lookalike trick."
+    },
+    {
+     "t": " Ignore if already updated."
+    }
+   ]
+  },
+  {
+   "id": "wa-family",
+   "kind": "WhatsApp",
+   "title": "A message from an unsaved number",
+   "head": {
+    "t": "Unsaved number · +91 91XXX XXX45"
+   },
+   "parts": [
+    {
+     "t": "Hi Papa, "
+    },
+    {
+     "t": "I lost my phone and this is my new number. ",
+     "f": 1,
+     "why": "\"New number\" messages are the usual first step of an impersonation scam. Check by calling the old number."
+    },
+    {
+     "t": "I am in the hospital and need ₹15,000 urgently. ",
+     "f": 1,
+     "why": "An emergency plus urgent money is built to make you pay before you think."
+    },
+    {
+     "t": "Send it to my friend's UPI ID, he is helping me. ",
+     "f": 1,
+     "why": "Payment goes to a third person you do not know."
+    },
+    {
+     "t": "Don't call, my phone mic is broken. ",
+     "f": 1,
+     "why": "They avoid a call because your voice check would expose them."
+    },
+    {
+     "t": "I will repay tonight."
+    }
+   ]
+  },
+  {
+   "id": "mail-tax",
+   "kind": "Email",
+   "title": "An email that looks official",
+   "head": {
+    "t": "From: refund@incometax-gov-in.com",
+    "f": 1,
+    "why": "Real Indian government sites end in .gov.in. This is a .com lookalike."
+   },
+   "parts": [
+    {
+     "t": "Dear Taxpayer, "
+    },
+    {
+     "t": "Your income tax refund of ₹45,820 is approved. ",
+     "f": 1,
+     "why": "Unexpected money is bait. Check refunds only on the official portal that you log in to yourself."
+    },
+    {
+     "t": "Claim within 12 hours or it will be cancelled. ",
+     "f": 1,
+     "why": "A short deadline is pressure."
+    },
+    {
+     "t": "Enter your card number, expiry and ATM PIN on the form to receive the refund. ",
+     "f": 1,
+     "why": "Nobody needs your card PIN to pay you. A PIN only lets money out."
+    },
+    {
+     "t": "Assessment Year 2025-26. "
+    },
+    {
+     "t": "Attachment: Refund_Form.apk",
+     "f": 1,
+     "why": "An .apk is an app file. Real offices never send apps by email or chat."
+    }
+   ]
+  },
+  {
+   "id": "web-pay",
+   "kind": "Web page",
+   "title": "A page opened from a link",
+   "head": {
+    "t": "https://paytm.co-secure-refund.top/pay",
+    "f": 1,
+    "why": "The real address would end in paytm.com. This site belongs to \"co-secure-refund.top\"."
+   },
+   "parts": [
+    {
+     "t": "Congratulations! You won ₹2,000 cashback. ",
+     "f": 1,
+     "why": "Surprise prizes are bait to get you to act."
+    },
+    {
+     "t": "Offer ends in 04:59 ",
+     "f": 1,
+     "why": "A countdown timer creates panic."
+    },
+    {
+     "t": "Enter your UPI PIN to receive the money. ",
+     "f": 1,
+     "why": "A PIN only sends money. You never need it to receive."
+    },
+    {
+     "t": "100% secure. Verified by RBI ",
+     "f": 1,
+     "why": "Trust badges are easy to fake. RBI does not \"verify\" websites like this."
+    },
+    {
+     "t": "Powered by UPI. "
+    },
+    {
+     "t": "Terms apply."
+    }
+   ]
+  },
+  {
+   "id": "chat-army",
+   "kind": "Marketplace chat",
+   "title": "A buyer on a selling app",
+   "head": {
+    "t": "Buyer: \"Major Rajesh Singh\""
+   },
+   "parts": [
+    {
+     "t": "Hello, I like your sofa. "
+    },
+    {
+     "t": "I am an army officer posted far away so I cannot meet. ",
+     "f": 1,
+     "why": "\"Officer posted far away\" is a common story to explain why they cannot meet. A genuine buyer can send a relative or pay on delivery."
+    },
+    {
+     "t": "I will pay the full price now. "
+    },
+    {
+     "t": "I am sending a QR code. Scan it and enter your PIN to receive the money. ",
+     "f": 1,
+     "why": "Every UPI QR makes YOU pay. A PIN is never needed to receive."
+    },
+    {
+     "t": "It shows pending, so enter the PIN again. ",
+     "f": 1,
+     "why": "Pressure to retry. Each PIN entry sends more money out."
+    },
+    {
+     "t": "My courier will collect it tomorrow."
+    }
+   ]
+  },
+  {
+   "id": "tg-job",
+   "kind": "Telegram group",
+   "title": "A \"work from home\" offer",
+   "head": {
+    "t": "Group: \"Work From Home Jobs 2026\""
+   },
+   "parts": [
+    {
+     "t": "Earn ₹5,000 every day by liking videos! ",
+     "f": 1,
+     "why": "Pay that high for so little work is a lure."
+    },
+    {
+     "t": "No experience needed. "
+    },
+    {
+     "t": "Pay ₹500 registration to start your first task. ",
+     "f": 1,
+     "why": "Real jobs do not charge you to start. Small early payouts are bait for bigger deposits."
+    },
+    {
+     "t": "Your first withdrawal is guaranteed. ",
+     "f": 1,
+     "why": "\"Guaranteed\" returns are a red flag in any money scheme."
+    },
+    {
+     "t": "Only 5 seats left today! ",
+     "f": 1,
+     "why": "False scarcity pushes you to hurry."
+    },
+    {
+     "t": "Join: t.me/easytasks_india"
+    }
+   ]
+  }
+ ]
+}
