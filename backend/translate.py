@@ -29,7 +29,14 @@ LANG_DIR = os.path.join(ROOT, "frontend", "lang")
 GEMINI_URL = os.getenv("VP_GEMINI_URL") or ai.GEMINI_URL
 MODELS = ai.MODELS
 LANGS = {k: v for k, v in ai.LANG_NAMES.items()}
-BATCH = int(os.getenv("TRANSLATE_BATCH", "60"))          # sentences per Gemini call
+BATCH = int(os.getenv("TRANSLATE_BATCH", "60"))
+# One web request must finish before the server's own time limit (30 s on the default Render start command), or the worker is killed.
+BUDGET = float(os.getenv("TRANSLATE_BUDGET", "22"))
+_dl = threading.local()
+
+
+def _left() -> float:
+    return getattr(_dl, "end", 0) - time.time() if getattr(_dl, "end", 0) else 1e9          # sentences per Gemini call
 RPM = int(os.getenv("TRANSLATE_RPM", "12"))              # Gemini calls per minute for this server (free tiers allow about 10 to 15)
 DAILY = int(os.getenv("TRANSLATE_DAILY", "1500"))        # Gemini calls per day for this server
 
@@ -150,8 +157,10 @@ def _ask(language: str, numbered: dict, key: str, timeout: int = 75):
     limited = False
     for model in MODELS:
         for _ in range(2):
+            if _left() < 4:                            # out of time for this request: stop and let the page ask again
+                return None
             try:
-                r = requests.post(GEMINI_URL.format(model=model), headers={"x-goog-api-key": key, "Content-Type": "application/json"}, json=body(_THINK[0]), timeout=timeout)
+                r = requests.post(GEMINI_URL.format(model=model), headers={"x-goog-api-key": key, "Content-Type": "application/json"}, json=body(_THINK[0]), timeout=max(3, min(timeout, _left() - 1)))
             except requests.RequestException:
                 break
             if r.status_code == 400 and _THINK[0] and "think" in r.text.lower():
@@ -184,7 +193,7 @@ def translate_batch(code: str, items: dict, key: str, depth: int = 0) -> dict:
     ids = list(items)
     numbered = {str(i + 1): items[x] for i, x in enumerate(ids)}
     data = _ask(language, numbered, key)
-    if data is None and len(ids) > 12 and depth < 2:        # answer cut off or malformed: ask for each half on its own
+    if data is None and len(ids) > 12 and depth < 2 and _left() > 12:        # answer cut off or malformed: ask for each half on its own
         half = len(ids) // 2
         out = translate_batch(code, {x: items[x] for x in ids[:half]}, key, depth + 1)
         out.update(translate_batch(code, {x: items[x] for x in ids[half:]}, key, depth + 1))
@@ -328,6 +337,7 @@ def serve(code: str, ids: list, key: str | None, limit: int = 0) -> dict:
     if not key:
         info["error"] = "no-key"
         return info
+    _dl.end = time.time() + BUDGET if not threading.current_thread().name.startswith("prewarm") else 0
     claim = _claim(code, todo, max(1, min(BATCH, limit or BATCH)))
     if not claim:                                       # other requests are already translating everything that is left
         info["error"] = "busy"
@@ -347,6 +357,10 @@ def serve(code: str, ids: list, key: str | None, limit: int = 0) -> dict:
             return info
         if new:
             remember(code, new)
+        elif _left() < 4:                                # ran out of this request's time, not Gemini's fault: try again, do not mark as bad
+            info["error"] = "busy"
+            info["wait"] = 2
+            return info
         else:
             info["error"] = "failed"
         for i in claim:
@@ -398,6 +412,6 @@ def start_prewarm(spec: str, key: str) -> list:
         codes = [c.strip() for c in spec.split(",") if c.strip() in LANGS]
     codes = [c for c in codes if c != "en"]
     if codes and key and (db_enabled() or os.getenv("PREWARM_FORCE")):
-        threading.Thread(target=_prewarm, args=(codes, key), daemon=True).start()
+        threading.Thread(target=_prewarm, args=(codes, key), daemon=True, name="prewarm").start()
         return codes
     return []
