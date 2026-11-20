@@ -2,7 +2,7 @@
    1. The app opens at once, even when the free server is asleep or the phone is offline (a saved copy is used).
    2. A slow or failing server can never leave the page blank or stuck: the network gets a few seconds, then the saved copy wins.
    3. An error page is never saved as if it were the app, and nothing from /api/ is ever saved. */
-const VERSION = 'v13';
+const VERSION = 'v14';
 const SHELL = 'vp-shell-' + VERSION;
 const DATA = 'vp-data-' + VERSION;
 const PAGES = ['/', '/manifest.webmanifest', '/favicon.svg', '/icons/vp-any-192.png', '/icons/vp-any-512.png', '/icons/vp-maskable-512.png'];
@@ -85,7 +85,7 @@ self.addEventListener('fetch', e => {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;                  // fonts and library files: the browser handles them
   const p = url.pathname;
-  if (p.startsWith('/api/') || p === '/sw.js') return;         // never saved
+  if (p.startsWith('/api/') || p === '/sw.js' || p === '/privacy' || p === '/privacy.html') return;   // never saved; the privacy page always comes from the server
   if (req.mode === 'navigate') return e.respondWith(page(e));
   if (p.startsWith('/data/') || p.startsWith('/lang/')) return e.respondWith(refresh(e, DATA));
   if (/\.(png|svg|ico|webmanifest|woff2?)$/.test(p)) return e.respondWith(keep(e, SHELL));

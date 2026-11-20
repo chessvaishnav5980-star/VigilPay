@@ -93,6 +93,10 @@ def _page_bytes():
         _page.update(sig=sig, raw=raw, gz=gzip.compress(raw, 6), etag='"' + hashlib.sha1(raw).hexdigest()[:20] + '"')
     return _page
 
+@app.get("/privacy")
+def privacy_page():
+    return send_from_directory(ROOT / "frontend", "privacy.html")
+
 @app.get("/")
 def index():
     p = _page_bytes()
