@@ -2,7 +2,7 @@
    1. The app opens at once, even when the free server is asleep or the phone is offline (a saved copy is used).
    2. A slow or failing server can never leave the page blank or stuck: the network gets a few seconds, then the saved copy wins.
    3. An error page is never saved as if it were the app, and nothing from /api/ is ever saved. */
-const VERSION = 'v9';
+const VERSION = 'v10';
 const SHELL = 'vp-shell-' + VERSION;
 const DATA = 'vp-data-' + VERSION;
 const PAGES = ['/', '/manifest.webmanifest', '/favicon.svg', '/icons/vp-any-192.png', '/icons/vp-any-512.png', '/icons/vp-maskable-512.png'];

@@ -1975,6 +1975,13 @@ main > section .lead { font-size: 1.06rem; max-width: 64ch; }
 .live-panel .btn { margin: 8px 0; }
 #scams .grid { align-items: stretch !important; }
 #scams .grid > .card { height: 100%; }
+@media (min-width: 901px) {
+  /* Fewer, bigger top-bar items for first-time and older users. The tools live under Toolkit. */
+  .nav ul > li > a, .nav .nav-morebtn { font-size: 1.03rem !important; font-weight: 700 !important; padding: 9px 10px !important; }
+  .nav ul > li.nav-sos > a { background: #dc2626; color: #fff !important; border-radius: 999px; padding: 10px 20px !important; }
+  .nav ul > li.nav-sos > a::after { display: none !important; }
+  .nav ul > li.nav-sos > a:hover { background: #b91c1c; }
+}
 </style>
 </head>
 <body>
@@ -2005,11 +2012,10 @@ main > section .lead { font-size: 1.06rem; max-width: 64ch; }
   <div class="wrap">
     <a class="brand" href="#top" aria-label="VigilPay home"><svg><use href="#shield"/></svg>VigilPay</a>
     <ul>
-      <li><a href="#emergency">Emergency</a></li>
+      <li class="nav-sos"><a href="#emergency">Emergency</a></li>
       <li><a href="#triage" data-i18n="nav_help">Scam help</a></li>
       <li><a href="#coach" data-i18n="nav_check">Check a message</a></li>
-      <li><a href="#tools" data-open-tool="spot">Phishing Spotter</a></li><li><a href="#tools" data-open-tool="sms">SMS checker</a></li>
-      <li><a href="#tools" data-i18n="nav_tools">Toolkit</a></li>
+            <li><a href="#tools" data-i18n="nav_tools">Toolkit</a></li>
       <li><a href="#scams" data-i18n="nav_guide">Scam guide</a></li>
       <li><a href="#game" data-i18n="nav_play">Play</a></li>
       <li class="nav-low"><a href="#community" data-i18n="nav_community">Community</a></li>
