@@ -1978,6 +1978,8 @@ main > section .lead { font-size: 1.06rem; max-width: 64ch; }
 @media (min-width: 901px) {
   /* Fewer, bigger top-bar items for first-time and older users. The tools live under Toolkit. */
   .nav ul > li > a, .nav .nav-morebtn { font-size: 1.03rem !important; font-weight: 700 !important; padding: 9px 10px !important; }
+  .nav ul { align-items: center !important; }
+  .nav ul > li > a, .nav .nav-morebtn { margin: 0 !important; top: 0 !important; position: relative !important; display: inline-flex !important; align-items: center; justify-content: center; min-height: 44px; line-height: 1.2 !important; box-sizing: border-box; }
   .nav ul > li.nav-sos > a { background: #dc2626; color: #fff !important; border-radius: 999px; padding: 10px 20px !important; }
   .nav ul > li.nav-sos > a::after { display: none !important; }
   .nav ul > li.nav-sos > a:hover { background: #b91c1c; }
@@ -7770,7 +7772,14 @@ window.VPQR = (function () {
   if (!ul || !more) return;
   var items = Array.prototype.filter.call(ul.children, function (li) { return li !== more && !li.classList.contains('menu-tour'); });
   var timer = 0;
-  function over() { return ul.scrollWidth > ul.clientWidth + 1 || nav.scrollWidth > nav.clientWidth + 1; }
+  var right = nav.querySelector('.nav-right');
+  function over() {
+    if (ul.scrollWidth > ul.clientWidth + 1 || nav.scrollWidth > nav.clientWidth + 1) return true;
+    var edge = right ? right.getBoundingClientRect().left - 14 : 1e9, ur = ul.getBoundingClientRect();
+    var vis = Array.prototype.filter.call(ul.children, function (li) { return li.offsetParent && !li.classList.contains('menu-tour'); });
+    var last = vis[vis.length - 1];
+    return !!last && last.getBoundingClientRect().right > edge && ur.width > 0;
+  }
   function fit() {
     nav.classList.remove('tight'); more.classList.remove('on');
     items.forEach(function (li) { li.classList.remove('nav-hide'); });
@@ -7782,9 +7791,10 @@ window.VPQR = (function () {
   }
   function soon() { clearTimeout(timer); timer = setTimeout(fit, 100); }
   window.addEventListener('resize', soon); window.addEventListener('load', soon);
-  window.addEventListener('vp:lang', soon); window.addEventListener('vp:rendered', soon);
+  window.addEventListener('vp:lang', soon); window.addEventListener('vp:rendered', soon); window.addEventListener('vp:auth', soon); window.addEventListener('storage', soon);
+  setTimeout(soon, 600); setTimeout(soon, 2000); setTimeout(soon, 5000);
   if (document.fonts) { document.fonts.ready.then(soon); document.fonts.addEventListener && document.fonts.addEventListener('loadingdone', soon); }
-  if (window.ResizeObserver) { var ro = new ResizeObserver(soon); ro.observe(nav.querySelector('.nav-right') || nav); ro.observe(nav.querySelector('.brand') || nav); }
+  if (window.ResizeObserver) { var ro = new ResizeObserver(soon); ro.observe(nav.querySelector('.nav-right') || nav); ro.observe(nav.querySelector('.brand') || nav); ro.observe(ul); }
   soon();
 })();
 </script>
